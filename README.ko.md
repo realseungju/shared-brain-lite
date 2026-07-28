@@ -25,38 +25,55 @@ English: [README.md](README.md)
   result 없이 `done/`에 있는 task, 파일명과 어긋나는 task id — 전부 거부됩니다.
   검사하지 않는 구조는 조용히 사실이 아니게 됩니다.
 
-## 10분 시작
+## 사용하는 방식
 
-요구사항: Git, Python 3.10 이상. 외부 Python 패키지는 필요하지 않습니다.
+Shared Brain Lite는 따로 실행하는 앱이 아닙니다. **저장소 루트 자체를 AI 에이전트의
+작업 디렉토리이자 장기 기억으로 사용합니다.**
 
-1. `system/context.md`에 실제 하는 일을 적습니다.
-2. 첫 task를 생성합니다.
+이 템플릿으로 저장소를 만들거나 clone한 뒤, Orca·Hermes·Claude Code·Codex CLI 같은
+AI 에이전트 플랫폼에서 해당 폴더를 프로젝트나 작업 디렉토리로 엽니다. 도구마다
+project directory·workspace·repository·working directory처럼 이름은 다르지만,
+`AGENTS.md`·`CLAUDE.md`·`system/`이 있는 저장소 루트를 지정하면 됩니다.
+
+각 AI용 진입 파일은 모두 같은 운영 규칙과 현재 context를 읽도록 연결되어 있습니다.
+사용자는 자연어로 작업을 요청하고, AI가 필요한 기억을 읽고 생성기와 lint를 실행하며,
+다음 session이나 다른 AI가 이어받을 상태를 기록합니다.
+
+## 빠른 시작
+
+요구사항: AI가 실행되는 환경에 Git과 Python 3.10 이상. 외부 Python 패키지는 필요하지
+않습니다.
+
+1. 이 템플릿으로 저장소를 만들거나 clone합니다.
+2. 저장소 루트를 AI 플랫폼의 작업 디렉토리로 지정하고 그 위치에서 AI를 시작합니다.
+3. 첫 요청을 자연어로 전달합니다.
+
+> 먼저 저장소의 운영 지침을 읽어줘. 이 shared brain을 [연구 주제] 용도로 초기화하고,
+> `system/context.md`를 갱신한 다음 [목표]를 첫 task로 만들어줘.
+
+4. 이후 작업도 자연어로 요청합니다. task를 시작하거나 마칠 때 shared brain 상태도
+   갱신해 달라고 하면 됩니다. 다른 AI 플랫폼에서도 같은 저장소를 작업 디렉토리로 열면
+   기록된 상태부터 이어갈 수 있습니다.
+5. 다른 기기나 동료와 기억을 공유해야 할 때 AI에게 commit과 push를 요청합니다.
+   사용하는 플랫폼에 따라 Git 작업 승인이 필요할 수 있습니다.
+
+아래 Python 명령은 보통 **사용자가 직접 입력하지 않습니다.** AI가 운영 흐름 안에서
+실행하는 정본 명령입니다.
 
 ```sh
 python infra/new-task.py first-task --title "첫 작업"
-```
-
-3. `tasks/backlog/`에 생성된 파일을 채웁니다. 착수할 때 `tasks/doing/`으로 옮기고
-   **`agent`와 `started` 필드를 반드시 채웁니다** — `brain-lint`가 요구하므로 비워 두면
-   pre-commit에서 커밋이 막힙니다. 필드 이름과 허용값은
-   [`system/conventions.md`](system/conventions.md)에 전부 있습니다.
-4. 작업을 마칠 때 session 요약을 생성합니다.
-
-```sh
 python infra/new-session.py first-session \
   --agent Codex \
   --tags demo \
   --hook "다음 에이전트가 이 줄만 읽고 본문을 열지 판단한다" \
   --did "첫 task를 생성하고 구조를 확인함" \
   --next "실제 프로젝트 context 작성"
-```
-
-5. 구조를 검사합니다.
-
-```sh
 python infra/brain-lint.py
-python -m unittest discover -s infra/tests -v
 ```
+
+명령을 문서에 남긴 이유는 AI가 같은 방식으로 작업하게 하고, 필요할 때 사람이 직접
+문제를 확인하거나 검증할 수 있게 하기 위해서입니다. task 필드와 허용값은
+[`system/conventions.md`](system/conventions.md)에 있습니다.
 
 ## 구조
 
@@ -105,13 +122,15 @@ opt-in task는 `tasks/backlog/`에 있습니다.
 
 ## Git hook
 
-선택 사항이지만 권장합니다. 매 commit 전에 `brain-lint`가 실행됩니다.
+선택 사항이지만 권장합니다. AI에게 한 번 설정해 달라고 요청하면 이후 매 commit 전에
+`brain-lint`가 실행됩니다. AI가 사용할 명령은 다음과 같습니다.
 
 ```sh
 git config core.hooksPath infra/hooks
 ```
 
-**실제로 도는지 확인하세요** — 있다고 믿는데 안 도는 게이트는 없느니만 못합니다.
+AI에게 **실제로 도는지도 확인해 달라고 요청하세요** — 있다고 믿는데 안 도는 게이트는
+없느니만 못합니다.
 
 ```sh
 git commit --allow-empty -m "hook check"   # "brain-lint: 클린 ✓"가 찍혀야 정상

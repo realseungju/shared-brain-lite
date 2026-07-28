@@ -25,38 +25,58 @@ Free-form notes rot because nothing enforces them. Three mechanisms keep this fr
   entry, a task in `done/` with no result, a task id that disagrees with its filename — all
   rejected. Structure that isn't checked is structure that quietly stops being true.
 
+## How you use it
+
+Shared Brain Lite is not a separate app to run. **The repository root is the AI agent's
+working directory and its long-term memory.**
+
+Create a repository from this template or clone it, then open that directory as the
+project/workspace in Orca, Hermes, Claude Code, Codex CLI, or another coding-agent
+platform. The exact label varies by tool — project directory, workspace, repository, or
+working directory — but it must point to the root containing `AGENTS.md`, `CLAUDE.md`,
+and `system/`.
+
+The entry file for each supported agent directs it to the same operating rules and current
+context. You talk to the agent in natural language; the agent reads the relevant memory,
+runs the generators and lint, and records enough state for the next session or another
+agent to continue.
+
 ## Quick start
 
-Requirements: Git and Python 3.10+. No third-party packages.
+Requirements: Git and Python 3.10+ in the agent's environment. No third-party Python
+packages.
 
-1. Describe your actual work in `system/context.md`.
-2. Create your first task:
+1. Create a repository from this template or clone it.
+2. Set the repository root as your AI platform's working directory and start the agent
+   there.
+3. Give the agent an initialization request such as:
+
+> Read the repository instructions first. Initialize this shared brain for my research on
+> [topic], update `system/context.md`, and create a first task for [goal].
+
+4. Continue working in natural language. When you start or finish a task, ask the agent to
+   update the shared brain. Use the same repository from another AI platform to continue
+   from the recorded state.
+5. Ask the agent to commit and push when the memory needs to persist across machines or be
+   shared with another person. Your platform may ask you to approve those Git operations.
+
+You normally do **not** type the Python commands yourself. The agent runs commands like
+these as part of the workflow:
 
 ```sh
 python infra/new-task.py first-task --title "My first task"
-```
-
-3. Fill in the generated file in `tasks/backlog/`. When you start it, move it to
-   `tasks/doing/` **and fill in the `agent` and `started` fields** — `brain-lint` requires
-   them, and the pre-commit hook will reject the commit otherwise. Field names and allowed
-   values are in [`system/conventions.md`](system/conventions.md).
-4. When you stop working, write a session summary:
-
-```sh
 python infra/new-session.py first-session \
   --agent Codex \
   --tags demo \
   --hook "One line the next agent reads to decide whether to open this" \
   --did "Created the first task and checked the structure" \
   --next "Write the real project context"
-```
-
-5. Check the structure:
-
-```sh
 python infra/brain-lint.py
-python -m unittest discover -s infra/tests -v
 ```
+
+They are documented so agents know the canonical operations and humans can troubleshoot
+or verify them manually. Task fields and allowed values are defined in
+[`system/conventions.md`](system/conventions.md).
 
 ## Layout
 
@@ -106,13 +126,15 @@ These were left out on purpose. See `system/decisions.md` for the reasoning, and
 
 ## Git hook
 
-Optional but recommended. Runs `brain-lint` before every commit:
+Optional but recommended. Ask the agent to configure it once; it runs `brain-lint` before
+every commit. The command it will use is:
 
 ```sh
 git config core.hooksPath infra/hooks
 ```
 
-Verify it actually fires — a gate you believe in but that never runs is worse than no gate:
+Ask the agent to verify that it actually fires — a gate you believe in but that never runs
+is worse than no gate:
 
 ```sh
 git commit --allow-empty -m "hook check"   # should print "brain-lint: 클린 ✓"
