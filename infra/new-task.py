@@ -54,10 +54,10 @@ def main() -> int:
         return 2
 
     root = Path(args.root).resolve() if args.root else repo_root()
-    backlog = root / "tasks" / "backlog"
-    if not (root / "tasks" / "README.md").is_file():
+    if not (root / "system" / "RULES.md").is_file():
         print(f"[ERROR] Shared Brain Lite 루트가 아님: {root}", file=sys.stderr)
         return 2
+    backlog = root / "tasks" / "backlog"
     backlog.mkdir(parents=True, exist_ok=True)
 
     task_id = f"T{task_date}-{args.slug}"

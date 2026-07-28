@@ -43,6 +43,95 @@ class GeneratorTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 2)
 
+    def test_new_task_rejects_duplicate(self) -> None:
+        for _ in range(2):
+            result = run_script(
+                "new-task.py",
+                "dup-task",
+                "--title",
+                "중복",
+                "--date",
+                "2026-07-28",
+                "--root",
+                str(self.root),
+            )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("이미 존재", result.stderr)
+
+    def test_new_task_output_passes_lint(self) -> None:
+        run_script(
+            "new-task.py",
+            "lintable",
+            "--title",
+            "린트 통과",
+            "--date",
+            "2026-07-28",
+            "--root",
+            str(self.root),
+        )
+        lint = run_script("brain-lint.py", str(self.root))
+        self.assertEqual(lint.returncode, 0, lint.stdout + lint.stderr)
+
+    def test_new_session_rejects_overlong_hook(self) -> None:
+        result = run_script(
+            "new-session.py",
+            "long-hook",
+            "--agent",
+            "Codex",
+            "--tags",
+            "demo",
+            "--hook",
+            "가" * 101,
+            "--did",
+            "d",
+            "--next",
+            "n",
+            "--root",
+            str(self.root),
+        )
+        self.assertEqual(result.returncode, 2)
+
+    def test_new_session_rejects_bad_tag(self) -> None:
+        result = run_script(
+            "new-session.py",
+            "bad-tag",
+            "--agent",
+            "Codex",
+            "--tags",
+            "Demo Tag",
+            "--hook",
+            "훅",
+            "--did",
+            "d",
+            "--next",
+            "n",
+            "--root",
+            str(self.root),
+        )
+        self.assertEqual(result.returncode, 2)
+
+    def test_new_session_output_passes_lint(self) -> None:
+        run_script(
+            "new-session.py",
+            "lintable-session",
+            "--agent",
+            "Codex",
+            "--tags",
+            "demo",
+            "--hook",
+            "린트 통과 확인",
+            "--did",
+            "생성기 검증",
+            "--next",
+            "없음",
+            "--date",
+            "2026-07-28",
+            "--root",
+            str(self.root),
+        )
+        lint = run_script("brain-lint.py", str(self.root))
+        self.assertEqual(lint.returncode, 0, lint.stdout + lint.stderr)
+
     def test_new_session_creates_file_and_index_entry(self) -> None:
         result = run_script(
             "new-session.py",

@@ -1,93 +1,133 @@
 # Shared Brain Lite
 
-여러 AI 에이전트가 Git 저장소를 공용 기억으로 사용하는 경량 스타터입니다.
+A lightweight starter for using a Git repository as **shared long-term memory across AI agents**.
 
-핵심 흐름:
+한국어 문서: [README.ko.md](README.ko.md)
+
+Chat sessions forget. Different tools — Claude, Codex, Gemini, Copilot — don't share memory
+with each other. This repo makes the *repository* the memory instead: plain Markdown, one
+entry point every tool reads, and a lint gate that keeps the records honest.
 
 ```text
-아이디어 캡처 → 계획·Spec → Task → 작업 → Session 요약 → 다음 에이전트
+capture → plan/spec → task → work → session summary → next agent
 ```
 
-모든 정보는 평문 Markdown으로 남습니다. 특정 모델이나 채팅 세션의 기억에 의존하지 않습니다.
+## Why this instead of a notes folder
 
-## 포함 기능
+Free-form notes rot because nothing enforces them. Three mechanisms keep this from rotting:
 
-- Claude, Codex, Gemini, Copilot용 공통 진입점
-- Tier 0/1/2 계층형 읽기
-- `inbox → spec → task` 계획 게이트
-- `backlog → doing → done` task 생명주기
-- 태그·훅이 있는 session 요약과 index
-- task/session 생성기
-- 기본 구조를 검사하는 `brain-lint`
-- pre-commit과 GitHub Actions 품질 게이트
-- 지식 노드와 ADR 템플릿
+- **Tiered reading.** An agent reads `system/RULES.md`, `system/context.md`, the last few
+  lines of the session index, and the filenames in `tasks/doing/` — nothing else, until a
+  specific task needs it. Onboarding cost stays flat as the repo grows.
+- **Generators, not hand-editing.** Task and session files are created by scripts, so every
+  record has the same frontmatter schema and lands in the right place.
+- **A lint gate.** `brain-lint.py` runs on pre-commit and in CI. A session with no index
+  entry, a task in `done/` with no result, a task id that disagrees with its filename — all
+  rejected. Structure that isn't checked is structure that quietly stops being true.
 
-## 포함하지 않는 기능
+## Quick start
 
-- 개인 일정·아이디어 관리
-- 연구 문서·실험 결과 관리
-- 외부 캘린더나 GitHub Issue 동기화
-- 멀티 worktree 자동 통합
-- 모델 라우팅·평가·에이전트 안전 훅
+Requirements: Git and Python 3.10+. No third-party packages.
 
-`personal/`과 `research/`는 향후 확장 지점으로만 비워 두었습니다. 실제 사용자가 필요를 요청하면
-`tasks/backlog/`의 선택형 기능 task를 Planning부터 진행하세요.
-
-## 10분 시작
-
-요구사항: Git, Python 3.10 이상. 외부 Python 패키지는 필요하지 않습니다.
-
-1. `system/context.md`에 현재 프로젝트를 적습니다.
-2. 첫 task를 생성합니다.
+1. Describe your actual work in `system/context.md`.
+2. Create your first task:
 
 ```sh
-python infra/new-task.py first-task --title "첫 작업"
+python infra/new-task.py first-task --title "My first task"
 ```
 
-3. 생성된 파일을 `tasks/backlog/`에서 채우고, 착수할 때 `tasks/doing/`으로 옮깁니다.
-4. 작업을 마칠 때 session 요약을 생성합니다.
+3. Fill in the generated file in `tasks/backlog/`. When you start it, move it to
+   `tasks/doing/` **and fill in the `agent` and `started` fields** — `brain-lint` requires
+   them, and the pre-commit hook will reject the commit otherwise. Field names and allowed
+   values are in [`system/conventions.md`](system/conventions.md).
+4. When you stop working, write a session summary:
 
 ```sh
 python infra/new-session.py first-session \
   --agent Codex \
   --tags demo \
-  --hook "첫 작업 흐름 검증" \
-  --did "첫 task를 생성하고 구조를 확인함" \
-  --next "실제 프로젝트 context 작성"
+  --hook "One line the next agent reads to decide whether to open this" \
+  --did "Created the first task and checked the structure" \
+  --next "Write the real project context"
 ```
 
-5. 구조를 검사합니다.
+5. Check the structure:
 
 ```sh
 python infra/brain-lint.py
 python -m unittest discover -s infra/tests -v
 ```
 
-## 구조
+## Layout
 
 ```text
-system/       운영 규칙·현재 context·session·ADR
-tasks/        backlog/doing/done
-specs/        구현 전 명세
-inbox/        아직 계획되지 않은 아이디어
-knowledge/    재사용 가능한 지식 노드
-skills/       사용자 정의 스킬 확장점
-personal/     선택형 확장점, 기본 기능 없음
-research/     선택형 확장점, 기본 기능 없음
-infra/        생성기·lint·테스트·Git hook
+system/       rules, current context, session summaries, ADRs
+tasks/        backlog / doing / done
+specs/        what to build, before building it
+inbox/        captured ideas, not yet planned
+knowledge/    reusable lessons that outlive a single project
+research/     per-project research notes and experiment records (Tier 2)
+skills/       extension point for tool-specific skills
+personal/     extension point, empty by default
+infra/        generators, lint, tests, Git hook
 ```
+
+`system/RULES.md` is the single source of operating rules. `CLAUDE.md`, `AGENTS.md`,
+`GEMINI.md`, and `.github/copilot-instructions.md` are thin stubs that all point at it, so
+adding a new AI tool means adding one more stub — not one more copy of the rules.
+
+## Included
+
+- Shared entry points for Claude, Codex, Gemini, and Copilot
+- Tier 0/1/2 reading discipline
+- `inbox → spec → task` planning gate
+- `backlog → doing → done` task lifecycle
+- Session summaries with tags, hooks, and an append-only index
+- Task and session generators
+- `brain-lint` structural checks, wired into pre-commit and GitHub Actions
+- Templates for specs, knowledge nodes, research notes, and experiment records
+
+## Not included
+
+- Personal calendar / idea management (`personal/` is a deliberate blank — see ADR-002)
+- External calendar or GitHub Issue sync
+- Multi-worktree auto-integration
+- Model routing, evaluation harnesses, or agent safety hooks
+
+These were left out on purpose. See `system/decisions.md` for the reasoning, and
+`tasks/backlog/` for the opt-in task to add them if you actually need them.
 
 ## Git hook
 
-선택 사항입니다. 설치하면 commit 전에 `brain-lint`가 실행됩니다.
+Optional but recommended. Runs `brain-lint` before every commit:
 
 ```sh
 git config core.hooksPath infra/hooks
 ```
 
-## 운영 원칙
+Verify it actually fires — a gate you believe in but that never runs is worse than no gate:
 
-- 기록되지 않은 작업은 다음 에이전트가 알 수 없습니다.
-- 전체 저장소를 매번 읽지 말고 필요한 Tier만 읽습니다.
-- inbox 항목은 Spec과 task로 구조화하기 전 구현하지 않습니다.
-- 실제 개인정보·비밀·대용량 연구 데이터는 공개 저장소에 넣지 않습니다.
+```sh
+git commit --allow-empty -m "hook check"   # should print "brain-lint: 클린 ✓"
+```
+
+GitHub Actions runs the same lint and the test suite on every push and PR, so CI catches it
+even if the local hook is missing.
+
+## Working with someone else
+
+Each person can keep their own copy, or you can share one repo. If you share one, note that
+`system/sessions/index.md` is append-only and will conflict whenever two people close a
+session — `.gitattributes` already sets `merge=union` on it, which keeps both sides' lines.
+Task and session bodies are one-item-per-file, so they don't conflict.
+
+## Principles
+
+- Work that isn't written down doesn't exist for the next agent.
+- Read the tier you need, not the whole repo.
+- Don't implement an inbox item before it becomes a spec or a task.
+- Never commit real secrets, personal data, or large research artifacts to a public repo.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

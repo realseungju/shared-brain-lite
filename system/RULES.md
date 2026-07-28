@@ -32,6 +32,9 @@ inbox → planning/spec → tasks/backlog → tasks/doing → tasks/done
 - 완료 시 `done/`으로 옮기고 `finished`, `closed_reason`, `result`를 채운다.
 - 한 task에는 한 명의 활성 작성자만 둔다.
 
+필드 이름과 허용값은 `system/conventions.md`에 전부 적혀 있다. 채우지 않으면
+`brain-lint`가 거부하므로 추측하지 말고 표를 본다.
+
 ## 파일 생성
 
 task와 session 파일은 손으로 새로 만들지 않는다.
@@ -53,10 +56,19 @@ python infra/new-session.py {slug} --agent {이름} --tags {태그} \
 - 재사용 가능한 교훈은 `knowledge/`에 승격한다.
 - 사소한 문구 수정은 task와 session을 생략할 수 있다.
 
+## Research 기록
+
+연구·실험 기록은 `research/{project-slug}/`에 둔다. 관례와 템플릿은 `research/README.md`.
+
+- 프로젝트마다 `overview.md` 하나를 두고, 나머지는 주제별로 쪼갠다.
+- **정본 문서 하나를 지정**하고 결론은 거기에만 둔다. 실행 로그는 별도 문서다.
+- research는 Tier 2다. 시작 절차에서 읽지 않는다 — 필요할 때만 연다.
+- 원시 데이터·모델 가중치·비밀정보는 Git에 넣지 않는다. 위치만 적는다.
+
 ## 선택형 영역
 
-`personal/`과 `research/`는 기본 기능이 없는 확장 지점이다. 사용자가 실제 사용 사례를
-요청하기 전에는 파일 구조·자동화·데이터 포맷을 임의로 만들지 않는다.
+`personal/`은 기본 기능이 없는 확장 지점이다. 사용자가 실제 사용 사례를 요청하기
+전에는 파일 구조·자동화·데이터 포맷을 임의로 만들지 않는다.
 
 ## 금지
 
