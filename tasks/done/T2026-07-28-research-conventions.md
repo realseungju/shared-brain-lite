@@ -8,7 +8,7 @@ agent: Claude (Opus 5)
 started: 2026-07-28
 finished: 2026-07-28
 closed_reason: completed
-result: 커밋 대기
+result: 5c16bf0
 ---
 
 # research/ 최소 관례·템플릿 도입
