@@ -18,8 +18,8 @@ result:
 사용자가 실제로 요청할 때만 개인 일정·아이디어 관리 기능을 설계한다.
 현재 `personal/`은 확장 지점만 제공하며 관리 기능은 구현하지 않는다 (ADR-002).
 
-연구 문서 관리는 이 task에서 분리됐다 — `research/`는
-`T2026-07-28-research-conventions`에서 관례·템플릿까지 도입 완료(ADR-001).
+연구 문서 관리는 이 task에서 분리됐다 — `research/`는 관례·템플릿까지 도입 완료(ADR-001).
+그때 닫힌 task는 `examples/tasks/T2026-07-28-research-conventions.md`에 예시로 남아 있다.
 
 ## 착수 조건
 

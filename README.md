@@ -69,8 +69,15 @@ knowledge/    reusable lessons that outlive a single project
 research/     per-project research notes and experiment records (Tier 2)
 skills/       extension point for tool-specific skills
 personal/     extension point, empty by default
+examples/     filled-in artifacts to read — not live records
 infra/        generators, lint, tests, Git hook
 ```
+
+The live tree ships **empty on purpose**: no session summaries, no closed tasks, a
+placeholder `system/context.md`. If you create a repo from this template you inherit the
+structure, not someone else's Tier 0. To see what a filled-in session summary or a closed
+task actually looks like, read [`examples/`](examples/) — a regression test keeps those
+examples in sync with the schema `brain-lint` enforces.
 
 `system/RULES.md` is the single source of operating rules. `CLAUDE.md`, `AGENTS.md`,
 `GEMINI.md`, and `.github/copilot-instructions.md` are thin stubs that all point at it, so

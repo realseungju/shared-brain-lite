@@ -69,8 +69,14 @@ knowledge/    프로젝트를 넘어 재사용되는 교훈
 research/     프로젝트별 연구 문서·실험 기록 (Tier 2)
 skills/       도구별 스킬 확장점
 personal/     확장점, 기본은 비어 있음
+examples/     읽기용 예시 산출물 — live 기록이 아님
 infra/        생성기·lint·테스트·Git hook
 ```
+
+live 트리는 **의도적으로 비어 있습니다** — session 요약 없음, 닫힌 task 없음,
+`system/context.md`는 플레이스홀더. 템플릿으로 저장소를 만들면 구조를 물려받지 남의 Tier 0을
+물려받지 않습니다. 채워진 session 요약이나 닫힌 task가 어떤 모양인지는
+[`examples/`](examples/)를 보세요 — 회귀 시험이 이 예시들을 `brain-lint` 스키마와 맞춰 둡니다.
 
 `system/RULES.md`가 운영 규칙의 단일 출처입니다. `CLAUDE.md`·`AGENTS.md`·`GEMINI.md`·
 `.github/copilot-instructions.md`는 전부 그걸 가리키는 얇은 stub이라, 새 AI 도구를 붙일 때

@@ -1,23 +1,22 @@
 # Context
 
-> **이 저장소를 새로 받았다면 이 파일부터 통째로 교체하세요.** 아래 내용은 스타터 자신의
-> 상태이며, 동시에 "채워진 context.md는 이런 모양"이라는 예시입니다. 항상 1페이지 이내로 유지.
+> 모든 에이전트가 작업 전에 읽는 파일입니다. **이 파일을 당신의 실제 상황으로 교체하세요.**
+> 항상 1페이지 이내로 유지합니다 — 길어지면 Tier 0 읽기 비용이 매 세션마다 늘어납니다.
+> 채워진 예시는 `examples/`를 보세요.
 
 ## 이 저장소는 무엇인가
 
-여러 AI 에이전트가 공유하는 Git 기반 영구 기억. 운영 규칙 → `system/RULES.md`,
-포맷·필드 스키마 → `system/conventions.md`.
+(무엇을 위한 저장소인지 한두 문장. 운영 규칙 → `system/RULES.md`, 필드 스키마 → `system/conventions.md`)
 
 ## 현재 목표
 
-- 스타터 자체를 배포 가능한 상태로 유지한다 (lint·테스트·CI 그린).
-- 기본 표면적을 작게 유지한다 — 요청 없는 기능은 backlog에 두고 구현하지 않는다.
+- (지금 무엇을 이루려 하는가)
 
 ## 프로젝트
 
 | 프로젝트 | 상태 | 다음 단계 | 정본 |
 |---|---|---|---|
-| shared-brain-lite (자기 자신) | 운영 중 | 사용자 피드백 반영 | `README.md` · `system/RULES.md` |
+|  | planning / 진행 / 운영 중 |  | `research/{slug}/overview.md` |
 
 ## 우선순위
 
@@ -28,4 +27,4 @@
 
 ## 열린 결정
 
-- `personal/` 구현 여부 — 사용자 요청 대기 (ADR-002, `tasks/backlog/T2026-07-28-opt-in-personal.md`)
+- `personal/` 구현 여부 — 요청 대기 (ADR-002, `tasks/backlog/T2026-07-28-opt-in-personal.md`)
