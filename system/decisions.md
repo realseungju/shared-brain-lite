@@ -1,36 +1,76 @@
 # Decisions
 
-중요한 결정은 기존 내용을 지우지 말고 아래에 ADR을 추가한다. 번복도 지우기가 아니라
-새 ADR로 한다 — 왜 바뀌었는지가 결정 자체만큼 중요하다.
+Record an important decision by adding an ADR below, without deleting what is already
+there. Reversing a decision is also an addition, not a deletion — why it changed matters as
+much as the decision itself.
 
 ```markdown
-## ADR-000: 결정 제목
-- 날짜: YYYY-MM-DD
-- 상태: 제안 | 승인 | 폐기
-- 결정:
-- 근거:
-- 영향:
+## ADR-000: Decision title
+- Date: YYYY-MM-DD
+- Status: proposed | accepted | superseded
+- Decision:
+- Rationale:
+- Consequences:
 ```
 
 ---
 
-## ADR-001: research/는 관례와 템플릿만 제공하고 자동화하지 않는다
-- 날짜: 2026-07-28
-- 상태: 승인
-- 결정: `research/{project-slug}/overview.md` 구조와 실험 기록 템플릿을 기본 제공한다.
-  생성기·lint 검사·인덱스 자동화는 넣지 않는다.
-- 근거: 연구 기록은 프로젝트마다 형태가 크게 다르다. 구조를 강제하면 맞지 않는 프로젝트에서
-  우회하게 되고, 우회가 시작되면 규칙 전체의 신뢰가 깎인다. 반면 "정본 하나 · 실행 로그와
-  결론 분리 · 근거 종류 명시 · 재현 정보"는 형태와 무관하게 값을 한다. 강제 대상은
-  task/session처럼 **다음 사람이 못 찾으면 유실되는 것**에 한정한다.
-- 영향: research는 Tier 2로 유지되어 시작 절차 읽기 비용이 늘지 않는다.
-  `brain-lint`는 `research/`의 존재만 확인하고 내용은 보지 않는다.
+## ADR-001: research/ ships conventions and templates only, with no automation
+- Date: 2026-07-28
+- Status: accepted
+- Decision: Ship the `research/{project-slug}/overview.md` layout and an experiment-record
+  template. Do not add generators, lint checks, or index automation for them.
+- Rationale: Research records differ enormously between projects. Enforcing a structure
+  makes people work around it in the projects it does not fit, and once the working around
+  starts, trust in every other rule erodes with it. What does pay regardless of shape is
+  "one canonical document, execution logs separate from conclusions, state the kind of
+  evidence, keep reproduction information." Enforcement is reserved for the things that are
+  *lost* if the next person cannot find them, like tasks and sessions.
+- Consequences: research stays Tier 2, so the start procedure does not get more expensive.
+  `brain-lint` checks only that `research/` exists, never its contents.
 
-## ADR-002: `personal/`은 요청 전까지 비워 둔다
-- 날짜: 2026-07-28
-- 상태: 승인
-- 결정: 개인 일정·아이디어 관리는 구조를 만들지 않고 확장 지점으로만 남긴다.
-  착수 조건은 `tasks/backlog/`의 opt-in task에 적어 둔다.
-- 근거: 개인 관리 습관은 사람마다 다르고, 쓰지 않는 구조는 읽기 비용만 늘린다.
-  개인정보가 공개 저장소에 섞여 들어가는 경로이기도 하다.
-- 영향: 필요해지면 Planning부터 시작한다. 그전까지 기본 배포판의 표면적이 작게 유지된다.
+## ADR-002: `personal/` stays empty until it is requested
+- Date: 2026-07-28
+- Status: accepted
+- Decision: Do not build a structure for personal schedules or idea management. Leave it as
+  an extension point, and record the conditions for starting it in an opt-in task in
+  `tasks/backlog/`.
+- Rationale: Personal habits differ from person to person, and a structure nobody uses is
+  pure reading cost. It is also a route by which personal data ends up in a public
+  repository.
+- Consequences: If it is ever needed, it starts from planning. Until then the default
+  distribution keeps a small surface.
+
+## ADR-003: English is canonical; Korean ships as a sibling translation
+- Date: 2026-08-30
+- Status: accepted
+- Decision: English is the canonical language for the path an agent and a cloner actually
+  walk — the four entry stubs, `system/RULES.md`, `system/conventions.md`, the section
+  headings the generators emit, every `brain-lint` message, the tests, `examples/`,
+  `system/context.md`, and `system/decisions.md`. Korean is preserved as
+  `system/RULES.ko.md` and `system/conventions.ko.md`, each opening with a pointer to the
+  canonical file and the commit it was synced from.
+- Rationale:
+  - The intent was already English-first, but it had reached exactly one file. `README.md`
+    was English while the four entry stubs an agent reads *before* it were Korean, as was
+    `system/RULES.md` that those stubs point at.
+  - This is not a translation, it is a schema change. `new-session.py` emitted `## 한 것`,
+    `## 결정·이유`, `## 미완·다음`, `## 주의·함정`, and `brain-lint.py` held those exact
+    Korean strings as the constants it enforced, with 16 test assertions and two example
+    files pinned to them. Translating the rules without the generators would have left
+    `RULES.md` describing a session summary the generator then wrote in Korean.
+  - The window is now. Measured 2026-08-30: 0 forks, 0 stars, 0 watchers, 0 open issues.
+    The only downstream is `shared-brain-research`, owned by the same author. The cost of a
+    breaking schema change is exactly zero today and becomes permanent with one adopter.
+  - No parity gate between a file and its `.ko.md` sibling. A lint can check that a
+    translation exists and which commit it claims to follow; it cannot honestly check that
+    the meaning still matches. Item 3 of the spec makes the lag visible instead of
+    pretending to prevent it.
+- Consequences:
+  - A Korean reader follows `RULES.ko.md` and `conventions.ko.md`, and the canonical pointer
+    tells them when the translation is behind.
+  - Templates under `research/`, `skills/`, `knowledge/`, `inbox/`, and `tasks/` are still
+    Korean. That is a known residue, deliberately left for a later pass.
+  - `shared-brain-research` is downstream and is not touched here. It picks this up through
+    the `UPSTREAM.md` procedure, selectively, on its own schedule.
+  - Spec: `specs/english-canonical.md`. Task: `T2026-08-30-english-canonical`.

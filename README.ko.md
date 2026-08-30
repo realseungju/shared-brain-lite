@@ -133,7 +133,7 @@ AI에게 **실제로 도는지도 확인해 달라고 요청하세요** — 있�
 없느니만 못합니다.
 
 ```sh
-git commit --allow-empty -m "hook check"   # "brain-lint: 클린 ✓"가 찍혀야 정상
+git commit --allow-empty -m "hook check"   # "brain-lint: clean ✓"가 찍혀야 정상
 ```
 
 GitHub Actions가 push·PR마다 같은 lint와 테스트를 돌리므로, 로컬 훅이 빠져도 CI가 잡습니다.

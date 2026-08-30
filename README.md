@@ -137,7 +137,7 @@ Ask the agent to verify that it actually fires — a gate you believe in but tha
 is worse than no gate:
 
 ```sh
-git commit --allow-empty -m "hook check"   # should print "brain-lint: 클린 ✓"
+git commit --allow-empty -m "hook check"   # should print "brain-lint: clean ✓"
 ```
 
 GitHub Actions runs the same lint and the test suite on every push and PR, so CI catches it

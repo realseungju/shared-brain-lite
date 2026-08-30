@@ -1,79 +1,84 @@
-# RULES — Shared Brain Lite 운영 규칙
+# RULES — Shared Brain Lite
 
-**기록되지 않은 작업은 다음 에이전트가 알 수 없다.**
+**Work that isn't written down doesn't exist for the next agent.**
 
-## 시작 절차
+한국어 번역: [`RULES.ko.md`](RULES.ko.md)
 
-1. 이 문서를 읽는다.
-2. `system/context.md`를 읽는다.
-3. `system/sessions/index.md` 꼬리 3~5줄을 읽는다.
-4. `tasks/doing/` 파일명만 확인한다.
-5. 현재 작업에 연결된 task·spec만 추가로 읽는다.
+## Starting a session
 
-전체 저장소를 매번 통독하지 않는다.
+1. Read this file.
+2. Read `system/context.md`.
+3. Read the last 3-5 lines of `system/sessions/index.md`.
+4. Look at the filenames in `tasks/doing/` — filenames only.
+5. Read only the task and spec connected to the work at hand.
 
-## 읽기 계층
+Do not read the whole repository every session.
 
-| Tier | 읽는 시점 | 대상 |
+## Reading tiers
+
+| Tier | When | What |
 |---|---|---|
-| 0 | 모든 session | `context.md`, session index 꼬리, doing 파일명 |
-| 1 | 작업 착수 | 해당 task, 연결된 spec |
-| 2 | 필요할 때만 | ADR, knowledge, research, 과거 session |
+| 0 | Every session | `context.md`, the tail of the session index, filenames in `doing/` |
+| 1 | Starting a task | That task and the spec it links to |
+| 2 | Only when needed | ADRs, knowledge, research, past sessions |
 
-## 작업 흐름
+## Workflow
 
 ```text
 inbox → planning/spec → tasks/backlog → tasks/doing → tasks/done
 ```
 
-- inbox는 아이디어 캡처용이다. 바로 구현하지 않는다.
-- 기능 구현 전 요구사항과 완료 조건을 Spec 또는 task에 적는다.
-- task 착수 시 `doing/`으로 옮기고 `agent`, `started`를 채운다.
-- 완료 시 `done/`으로 옮기고 `finished`, `closed_reason`, `result`를 채운다.
-- 한 task에는 한 명의 활성 작성자만 둔다.
+- `inbox/` is for capturing ideas. Do not implement straight from it.
+- Write the requirements and the done condition into a spec or a task before building.
+- When a task starts, move it to `doing/` and fill in `agent` and `started`.
+- When it finishes, move it to `done/` and fill in `finished`, `closed_reason`, `result`.
+- One task has one active writer.
 
-필드 이름과 허용값은 `system/conventions.md`에 전부 적혀 있다. 채우지 않으면
-`brain-lint`가 거부하므로 추측하지 말고 표를 본다.
+Field names and allowed values are all in `system/conventions.md`. `brain-lint` rejects a
+file that leaves them out, so read the table instead of guessing.
 
-## 파일 생성
+## Creating files
 
-task와 session 파일은 손으로 새로 만들지 않는다.
+Task and session files are never created by hand.
 
 ```sh
-python infra/new-task.py {slug} --title "제목"
-python infra/new-session.py {slug} --agent {이름} --tags {태그} \
-  --hook "index 한 줄 요약" --did "한 것" --next "다음"
+python infra/new-task.py {slug} --title "Title"
+python infra/new-session.py {slug} --agent {name} --tags {tags} \
+  --hook "One line the next agent reads to decide whether to open this" \
+  --did "What was done" --next "What is next"
 ```
 
-생성 후 task 본문과 session 본문을 보강하는 것은 허용한다.
+Filling in the body of a generated task or session afterwards is expected.
 
-## Session 종료
+## Closing a session
 
-다음 에이전트가 알아야 할 작업이면 session 요약을 남긴다.
+Leave a session summary if the next agent needs to know about the work.
 
-- 미완 작업은 task에 둔다.
-- 현재 상태 변화는 `system/context.md`에 반영한다.
-- 재사용 가능한 교훈은 `knowledge/`에 승격한다.
-- 사소한 문구 수정은 task와 session을 생략할 수 있다.
+- Unfinished work belongs in a task, not in the summary.
+- Changes to the current state go into `system/context.md`.
+- Reusable lessons are promoted to `knowledge/`.
+- A typo fix or a wording change can skip the task and the session summary.
 
-## Research 기록
+## Research records
 
-연구·실험 기록은 `research/{project-slug}/`에 둔다. 관례와 템플릿은 `research/README.md`.
+Research and experiment records live in `research/{project-slug}/`. Conventions and
+templates are in `research/README.md`.
 
-- 프로젝트마다 `overview.md` 하나를 두고, 나머지는 주제별로 쪼갠다.
-- **정본 문서 하나를 지정**하고 결론은 거기에만 둔다. 실행 로그는 별도 문서다.
-- research는 Tier 2다. 시작 절차에서 읽지 않는다 — 필요할 때만 연다.
-- 원시 데이터·모델 가중치·비밀정보는 Git에 넣지 않는다. 위치만 적는다.
+- One `overview.md` per project; split the rest by topic.
+- **Name one canonical document** and keep the conclusions only there. Execution logs are a
+  separate document.
+- Research is Tier 2. It is not read during the start procedure — open it when needed.
+- Raw data, model weights, and secrets do not go in Git. Record where they are instead.
 
-## 선택형 영역
+## Optional areas
 
-`personal/`은 기본 기능이 없는 확장 지점이다. 사용자가 실제 사용 사례를 요청하기
-전에는 파일 구조·자동화·데이터 포맷을 임의로 만들지 않는다.
+`personal/` is an extension point with no behaviour by default. Do not invent a file
+layout, automation, or data format for it before the user asks for a real use case.
 
-## 금지
+## Prohibited
 
-- Spec이나 완료 조건 없는 기능 구현
-- task/session 파일을 생성기 없이 새로 만들기
-- 검증하지 않은 결과를 완료로 기록
-- 실제 개인정보·토큰·비밀정보를 공개 저장소에 기록
-- 대용량 데이터나 모델 파일을 Git에 직접 저장
+- Building a feature with no spec and no done condition
+- Creating a task or session file without the generator
+- Recording an unverified result as complete
+- Committing real personal data, tokens, or secrets to a public repository
+- Storing large datasets or model files directly in Git

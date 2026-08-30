@@ -31,7 +31,7 @@ def make_brain(root: Path) -> None:
     write(root / "system/sessions/index.md", "# Sessions Index\n")
     write(root / "tasks/README.md", "# Tasks\n")
     for stub in ("AGENTS.md", "CLAUDE.md", "GEMINI.md", ".github/copilot-instructions.md"):
-        write(root / stub, "먼저 system/RULES.md를 읽는다.\n")
+        write(root / stub, "Read system/RULES.md first.\n")
 
 
 def run_script(name: str, *args: str) -> subprocess.CompletedProcess[str]:

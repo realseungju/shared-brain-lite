@@ -1,8 +1,10 @@
 # Conventions
 
-## 파일명
+한국어 번역: [`conventions.ko.md`](conventions.ko.md)
 
-| 위치 | 형식 |
+## Filenames
+
+| Location | Format |
 |---|---|
 | `tasks/*/` | `TYYYY-MM-DD-{slug}.md` |
 | `system/sessions/` | `YYYY-MM-DD-{slug}.md` |
@@ -11,68 +13,70 @@
 | `research/` | `{project-slug}/{doc-slug}.md` |
 | `inbox/` | `YYYYMMDD-{source}-{slug}.md` |
 
-slug는 소문자 영문·숫자·하이픈만 쓴다. `_template.md`로 시작하는 템플릿 파일은 예외다.
+A slug uses lowercase letters, digits, and hyphens only. Template files whose name starts
+with `_template.md` are the exception.
 
 ## Task frontmatter
 
-`infra/new-task.py`가 생성하고 `infra/brain-lint.py`가 검사한다. 손으로 상태를 옮길 때
-아래 필드를 직접 채워야 한다.
+`infra/new-task.py` creates it and `infra/brain-lint.py` checks it. When you move a task
+between states by hand, you fill these in yourself.
 
-| 필드 | 언제 필수 | 값 |
+| Field | Required when | Value |
 |---|---|---|
-| `id` | 항상 | 파일명(확장자 제외)과 정확히 같아야 한다 |
-| `title` | 항상 | 한 줄 제목 |
-| `phase` | 항상 | `planning` \| `review` \| `implementation` \| `validation` |
-| `assignee_role` | 선택 | 담당 역할(사람 이름 아님) |
-| `spec` | 선택 | 연결된 `specs/{slug}.md` 또는 `none` |
-| `agent` | `doing/`에서 | 지금 이 task를 쥔 작성자 |
-| `started` | `doing/`에서 | `YYYY-MM-DD` |
-| `finished` | `done/`에서 | `YYYY-MM-DD` |
-| `closed_reason` | `done/`에서 | `completed` \| `cancelled` \| `superseded` |
-| `result` | `done/`에서 | 커밋 해시·PR 번호 등 확인 가능한 산출물 |
+| `id` | Always | Exactly the filename without the extension |
+| `title` | Always | One-line title |
+| `phase` | Always | `planning` \| `review` \| `implementation` \| `validation` |
+| `assignee_role` | Optional | The role responsible, not a person's name |
+| `spec` | Optional | The linked `specs/{slug}.md`, or `none` |
+| `agent` | In `doing/` | The writer currently holding this task |
+| `started` | In `doing/` | `YYYY-MM-DD` |
+| `finished` | In `done/` | `YYYY-MM-DD` |
+| `closed_reason` | In `done/` | `completed` \| `cancelled` \| `superseded` |
+| `result` | In `done/` | A commit hash, PR number, or other checkable artifact |
 
-`phase`는 task가 **지금 어느 단계인지**이고, `backlog/doing/done`은 **어느 디렉터리에 있는지**다.
-둘은 독립이다 — `doing/`에 있는 `planning` phase task는 정상이다.
+`phase` is **which stage the task is at**; `backlog/doing/done` is **which directory it is
+in**. They are independent — a `planning` task sitting in `doing/` is normal.
 
-## Task 상태
+## Task states
 
 ```text
 backlog → doing → done
 ```
 
-완료 이유:
+Closing reasons:
 
-- `completed`: 목표 달성
-- `cancelled`: 중단하고 재개 계획 없음
-- `superseded`: 다른 접근으로 대체
+- `completed`: the goal was reached
+- `cancelled`: stopped with no plan to resume
+- `superseded`: replaced by a different approach
 
 ## Session frontmatter
 
-`infra/new-session.py`가 생성한다. 손으로 만들지 않는다.
+`infra/new-session.py` creates it. Do not create one by hand.
 
-| 필드 | 값 |
+| Field | Value |
 |---|---|
-| `date` | `YYYY-MM-DD` — 파일명 앞부분과 일치해야 한다 |
-| `agent` | 작성자 이름 |
-| `slug` | 파일명 뒷부분과 일치해야 한다 |
-| `tags` | 소문자-하이픈 목록 |
+| `date` | `YYYY-MM-DD` — must match the first part of the filename |
+| `agent` | The writer's name |
+| `slug` | Must match the rest of the filename |
+| `tags` | A list of lowercase-hyphen tags |
 
-본문에 `## 한 것`과 `## 미완·다음` 섹션이 반드시 있어야 한다(lint 검사 대상).
-`## 결정·이유`와 `## 주의·함정`은 생성기가 함께 넣지만 강제하지 않는다.
-모든 session 파일은 `system/sessions/index.md`에 한 줄로 등재돼 있어야 한다 —
-생성기가 자동으로 추가하므로 파일을 지울 때만 신경 쓰면 된다.
+The body must contain a `## What was done` section and an `## Open and next` section — both
+are checked by lint. `## Decisions and why` and `## Cautions` are written by the generator
+but not enforced. Every session file must have a one-line entry in
+`system/sessions/index.md`; the generator adds it, so this only matters if you delete a
+file.
 
-## Commit
+## Commits
 
-Conventional Commits를 권장한다.
+Conventional Commits are recommended.
 
 ```text
 <type>(<scope>): <imperative summary>
 ```
 
-## 문서
+## Documents
 
-- 결론을 먼저 쓴다.
-- 같은 내용을 여러 문서에 복제하지 않는다.
-- 실제 상태와 재사용 지식을 분리한다.
-- 다음 에이전트가 필요한 만큼만 남긴다.
+- State the conclusion first.
+- Do not copy the same content into several documents.
+- Keep current state and reusable knowledge apart.
+- Leave what the next agent needs, and no more.
