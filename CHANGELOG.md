@@ -33,6 +33,9 @@ which its operating path is English and its schema is settled.
 - `system/RULES.ko.md` and `system/conventions.ko.md` — Korean translations, each naming the
   canonical file and the commit it was synced from.
 - `specs/english-canonical.md` and ADR-003.
+- `examples/tasks/T2026-08-30-english-canonical.md` — the closed task for this change. It
+  lives in `examples/` rather than `tasks/done/` because the live tree ships empty, which
+  `test_live_tree_ships_empty` enforces.
 - This changelog.
 
 ### Notes

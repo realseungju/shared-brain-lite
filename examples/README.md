@@ -10,12 +10,13 @@ purely to show their shape, and the live tree ships empty.
 |---|---|
 | `sessions/2026-07-28-starter-handoff-hardening.md` | A filled session summary — the four sections: what was done, decisions, open items, cautions |
 | `tasks/T2026-07-28-research-conventions.md` | A closed task — every field you fill in when moving to `done/` |
+| `tasks/T2026-08-30-english-canonical.md` | A closed task with a linked spec — see `specs/english-canonical.md` and ADR-003 |
 
 ## Cautions
 
-- **`result: 683bbb1` is a commit hash from this repository's upstream
-  (shared-brain-lite).** It does not exist in the history of a repository created from the
-  template. Read it as a format example only.
+- **`result:` values here (`683bbb1`, `fb134ea`) are commit hashes from this repository's
+  own history.** They do not exist in the history of a repository created from the
+  template. Read them as format examples only.
 - Do not copy these files to start your own. Use the generators:
 
 ```sh
