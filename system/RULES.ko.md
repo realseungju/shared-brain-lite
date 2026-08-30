@@ -47,6 +47,8 @@ task와 session 파일은 손으로 새로 만들지 않는다.
 python infra/new-task.py {slug} --title "제목"
 python infra/new-session.py {slug} --agent {이름} --tags {태그} \
   --hook "index 한 줄 요약" --did "한 것" --next "다음"
+# 생성되는 섹션 제목은 영어다: ## What was done / ## Decisions and why /
+# ## Open and next / ## Cautions — lint가 그대로 검사한다(ADR-003).
 ```
 
 생성 후 task 본문과 session 본문을 보강하는 것은 허용한다.

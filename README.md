@@ -157,6 +157,12 @@ Task and session bodies are one-item-per-file, so they don't conflict.
 - Don't implement an inbox item before it becomes a spec or a task.
 - Never commit real secrets, personal data, or large research artifacts to a public repo.
 
+## Versioning
+
+Releases are tagged and recorded in [CHANGELOG.md](CHANGELOG.md). A change to the record
+schema — frontmatter fields, enforced section headings, generator output — is a breaking
+change and is called out there.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

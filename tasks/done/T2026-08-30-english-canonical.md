@@ -6,9 +6,9 @@ assignee_role: maintainer / agent
 spec: specs/english-canonical.md
 agent: Claude (Opus 5)
 started: 2026-08-30
-finished:
-closed_reason:
-result:
+finished: 2026-08-30
+closed_reason: completed
+result: fb134ea
 ---
 
 # English as the canonical language
@@ -20,17 +20,17 @@ disagreeing with each other.
 
 ## To do
 
-- [ ] Layer 1 — entry stubs: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`,
+- [x] Layer 1 — entry stubs: `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`,
       `.github/copilot-instructions.md`
-- [ ] Layer 2 — `system/RULES.md`, `system/conventions.md` to English;
+- [x] Layer 2 — `system/RULES.md`, `system/conventions.md` to English;
       `system/RULES.ko.md`, `system/conventions.ko.md` as translations with a canonical
       pointer and synced-from commit
-- [ ] Layer 3 — `infra/new-session.py`, `infra/new-task.py`: emitted section headings and
+- [x] Layer 3 — `infra/new-session.py`, `infra/new-task.py`: emitted section headings and
       CLI text
-- [ ] Layer 4 — `infra/brain-lint.py`: enforced section constants and every message
-- [ ] Layer 5 — `infra/tests/*` assertions, `examples/` rewritten against the English schema
-- [ ] `system/context.md` placeholder and `system/sessions/index.md` header
-- [ ] Verify: full test suite, `brain-lint`, a generated session and task, CI
+- [x] Layer 4 — `infra/brain-lint.py`: enforced section constants and every message
+- [x] Layer 5 — `infra/tests/*` assertions, `examples/` rewritten against the English schema
+- [x] `system/context.md` placeholder and `system/sessions/index.md` header
+- [x] Verify: full test suite, `brain-lint`, a generated session and task, CI
 
 ## Done when
 
@@ -50,3 +50,9 @@ disagreeing with each other.
   the same author. One adopter and this becomes permanent.
 - Adding lint checks and propagating to `shared-brain-research` are deliberately out of
   scope — both wait on decisions recorded elsewhere.
+
+- 2026-08-30 done. All five layers landed in `fb134ea`; `1873c1d` filled in the
+  synced-from commit for the two translations. Verified: 21 tests pass (unchanged in
+  count), `brain-lint` clean and printing English, a generated task and session pass lint
+  with English headings. Residue recorded in ADR-003: templates under `research/`,
+  `skills/`, `knowledge/`, `inbox/`, and `tasks/` are still Korean.

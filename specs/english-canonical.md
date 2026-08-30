@@ -1,6 +1,6 @@
 ---
 feature: english-canonical
-status: approved
+status: implemented
 author: Claude (Opus 5)
 date: 2026-08-30
 related_tasks: [T2026-08-30-english-canonical]
@@ -64,10 +64,10 @@ is exactly zero right now and becomes permanent the moment one adopter exists.
 
 ## Done when
 
-- [ ] The five layers are English and `python -m unittest discover -s infra/tests` reports
+- [x] The five layers are English and `python -m unittest discover -s infra/tests` reports
       no fewer than 21 tests, all passing.
-- [ ] `python infra/brain-lint.py` is clean and prints English.
-- [ ] `system/RULES.ko.md` and `system/conventions.ko.md` exist, each with a canonical
+- [x] `python infra/brain-lint.py` is clean and prints English.
+- [x] `system/RULES.ko.md` and `system/conventions.ko.md` exist, each with a canonical
       pointer and a synced-from commit.
-- [ ] A fresh session and task created by the generators pass lint with English headings.
+- [x] A fresh session and task created by the generators pass lint with English headings.
 - [ ] CI is green.
