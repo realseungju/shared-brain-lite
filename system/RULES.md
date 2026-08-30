@@ -1,6 +1,6 @@
 # RULES — Shared Brain Lite
 
-**Work that isn't written down doesn't exist for the next agent.**
+**Work that isn't written down cannot reach the next agent.**
 
 한국어 번역: [`RULES.ko.md`](RULES.ko.md)
 
