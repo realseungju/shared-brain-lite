@@ -30,7 +30,7 @@ English: [README.md](README.md)
 Shared Brain Lite는 따로 실행하는 앱이 아닙니다. **저장소 루트 자체를 AI 에이전트의
 작업 디렉토리이자 장기 기억으로 사용합니다.**
 
-이 템플릿으로 저장소를 만들거나 clone한 뒤, Orca·Hermes·Claude Code·Codex CLI 같은
+이 템플릿으로 저장소를 만들거나 clone한 뒤, Hermes·Claude Code·Codex CLI 같은
 AI 에이전트 플랫폼에서 해당 폴더를 프로젝트나 작업 디렉토리로 엽니다. 도구마다
 project directory·workspace·repository·working directory처럼 이름은 다르지만,
 `AGENTS.md`·`CLAUDE.md`·`system/`이 있는 저장소 루트를 지정하면 됩니다.

@@ -31,7 +31,7 @@ Shared Brain Lite is not a separate app to run. **The repository root is the AI 
 working directory and its long-term memory.**
 
 Create a repository from this template or clone it, then open that directory as the
-project/workspace in Orca, Hermes, Claude Code, Codex CLI, or another coding-agent
+project/workspace in Hermes, Claude Code, Codex CLI, or another coding-agent
 platform. The exact label varies by tool — project directory, workspace, repository, or
 working directory — but it must point to the root containing `AGENTS.md`, `CLAUDE.md`,
 and `system/`.
